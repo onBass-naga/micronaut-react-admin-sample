@@ -1,3 +1,18 @@
 micronaut:
     application:
         name: api-java
+    server:
+        port: 8086
+        cors:
+            enabled: true
+            configurations:
+                web:
+#                    allowedHeaders:
+#                        - Content-Type
+#                        - Authorization
+                    exposedHeaders:
+                        - Content-Type
+                        - Authorization
+                        - Content-Range
+jackson:
+    dateFormat: yyyy-MM-dd'T'HH:mm:ss.SSSXXX

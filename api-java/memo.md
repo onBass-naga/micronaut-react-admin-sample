@@ -15,3 +15,8 @@ Annotation Processor を有効にすればGradle使わなくてもcompile/test�
 $ ./gradlew assemble
 $ java -jar build/libs/api-java-0.1-all.jar 
 ```
+
+## RxJava
+
+[wiki](https://github.com/ReactiveX/RxJava/wiki)  
+
