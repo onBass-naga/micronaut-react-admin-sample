@@ -1,4 +1,4 @@
-package api.java;
+package sample;
 
 import io.micronaut.runtime.Micronaut;
 

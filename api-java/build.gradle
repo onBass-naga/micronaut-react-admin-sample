@@ -9,7 +9,7 @@ apply plugin:"application"
 apply plugin:"java"
 
 version "0.1"
-group "api.java"
+group "sample"
 
 repositories {
     mavenLocal()
@@ -44,6 +44,6 @@ shadowJar {
 
 run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1')
 
-mainClassName = "api.java.Application"
+mainClassName = "sample.Application"
 compileJava.options.compilerArgs += '-parameters'
 compileTestJava.options.compilerArgs += '-parameters'
