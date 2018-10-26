@@ -16,9 +16,10 @@ class HelloControllerSpec extends Specification {
     @AutoCleanup
     HttpClient client = HttpClient.create(embeddedServer.URL)
 
+    private def retrieve = { HttpRequest request -> client.toBlocking().retrieve(request) }
+
     void "test hello world response"() {
         expect:
-        client.toBlocking()
-                .retrieve(HttpRequest.GET('/hello')) == "Hello World"
+        retrieve(HttpRequest.GET('/hello')) == "Hello World"
     }
 }
