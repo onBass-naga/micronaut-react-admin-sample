@@ -1,0 +1,16 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "overview": "Learn Micronaut",
+      "deadline": "2018-11-01",
+      "isDone": false
+    },
+    {
+      "id": 2,
+      "overview": "Learn react-admin",
+      "deadline": "2018-11-15",
+      "isDone": false
+    }
+  ]
+}
