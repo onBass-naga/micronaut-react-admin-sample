@@ -2,7 +2,8 @@ plugins {
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id "com.github.johnrengelman.shadow" version "4.0.0"
     id "net.ltgt.apt-eclipse" version "0.18"
-    id "net.ltgt.apt-idea" version "0.18"	
+    id "net.ltgt.apt-idea" version "0.18"
+    id "org.flywaydb.flyway" version "5.2.1"
 }
 
 apply plugin:"application"
@@ -38,6 +39,12 @@ dependencies {
     testCompile "io.micronaut:micronaut-inject-java"
     testCompile "org.hamcrest:hamcrest-all:1.3"
 
+    compile "io.micronaut.configuration:micronaut-hibernate-jpa"
+    compile "io.micronaut.configuration:micronaut-jdbc-hikari"
+    runtime "com.h2database:h2"
+    compile "io.micronaut:micronaut-spring"
+    runtime "org.springframework:spring-jdbc"
+
     compile "org.codehaus.groovy:groovy-all:2.4.15"
     testCompile "org.spockframework:spock-core:1.2-groovy-2.4"
 }
@@ -51,3 +58,9 @@ run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1')
 mainClassName = "sample.Application"
 compileJava.options.compilerArgs += '-parameters'
 compileTestJava.options.compilerArgs += '-parameters'
+
+flyway {
+    url = 'jdbc:h2:file:./target/testDB;SCHEMA=PUBLIC;FILE_LOCK=NO'
+    user = 'sa'
+    password = ''
+}
