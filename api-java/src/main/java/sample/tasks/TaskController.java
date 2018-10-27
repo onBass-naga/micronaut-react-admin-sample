@@ -11,39 +11,27 @@ import sample.web.SearchCommand;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static io.micronaut.http.HttpResponse.created;
-import static io.micronaut.http.HttpResponse.ok;
-import static io.micronaut.http.HttpResponse.serverError;
+import static io.micronaut.http.HttpResponse.*;
 
 @Controller("/tasks")
 public class TaskController {
 
-    Map<Integer, Task> inMemoryDatastore = new LinkedHashMap<>();
+    private TaskService taskService;
 
-    {
-        Task task1 = new TaskBuilder()
-                .id(1)
-                .overview("Learn Micronaut")
-                .deadline(ZonedDateTime.now())
-                .create();
-        inMemoryDatastore.put(task1.id, task1);
-
-        Task task2 = new TaskBuilder()
-                .id(2)
-                .overview("Learn react-admin")
-                .deadline(ZonedDateTime.now())
-                .create();
-        inMemoryDatastore.put(task2.id, task2);
+    TaskController(TaskService taskService) {
+        this.taskService = taskService;
     }
 
     @Get("{?searchCommand*}")
     public HttpResponse<Collection<Task>> list(@Nullable SearchCommand searchCommand) {
         System.out.println(searchCommand);
 
-        Collection<Task> tasks = inMemoryDatastore.values();
+        Collection<Task> tasks = taskService.findAll();
 
         return ok(tasks)
                 .header(ContentRange.NAME,
@@ -52,28 +40,25 @@ public class TaskController {
 
     @Get("/{id}")
     public Maybe<Task> find(Integer id) {
-        Task task = inMemoryDatastore.get(id);
+        Task task = taskService.findById(id);
         return task == null ? Maybe.empty() : Observable.just(task).firstElement();
     }
 
     @Post
     public HttpResponse<Task> create(@Body Task task) {
-
-        Integer id = inMemoryDatastore.keySet().stream().max(Comparator.naturalOrder()).orElse(0) + 1;
-        task.id = id;
-        inMemoryDatastore.put(id, task);
-        return created(task);
+        Task created = taskService.create(task);
+        return created(created);
     }
 
     @Put("/{id}")
     public HttpResponse<Task> update(Integer id, @Body Task task) {
-        inMemoryDatastore.put(task.id, task);
+        taskService.update(task);
         return ok(task);
     }
 
     @Delete("/{id}")
     public HttpResponse<Map<String, Integer>> delete(Integer id) {
-        inMemoryDatastore.remove(id);
+        taskService.delete(id);
         Map<String, Integer> response = new HashMap<>();
         response.put("id", id);
         return ok(response);
@@ -91,7 +76,7 @@ public class TaskController {
             return serverError();
         }
 
-        parsed.id.forEach(id -> inMemoryDatastore.remove(id));
+        parsed.id.forEach(id -> taskService.delete(id));
         return ok(parsed.id);
     }
 
