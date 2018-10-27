@@ -3,18 +3,13 @@ package sample.tasks;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
-import io.reactivex.Maybe;
-import io.reactivex.Observable;
 import sample.web.ContentRange;
 import sample.web.DeleteFilter;
 import sample.web.SearchCommand;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.micronaut.http.HttpResponse.*;
 
@@ -39,9 +34,8 @@ public class TaskController {
     }
 
     @Get("/{id}")
-    public Maybe<Task> find(Integer id) {
-        Task task = taskService.findById(id);
-        return task == null ? Maybe.empty() : Observable.just(task).firstElement();
+    public Optional<Task> find(Integer id) {
+        return taskService.findById(id);
     }
 
     @Post
