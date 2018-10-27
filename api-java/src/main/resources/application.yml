@@ -6,14 +6,50 @@ micronaut:
         cors:
             enabled: true
             configurations:
-                web:
-#                    allowedHeaders:
-#                        - Content-Type
-#                        - Authorization
+                all:
                     exposedHeaders:
                         - Content-Type
                         - Authorization
                         - Content-Range
+
+    security:
+        enabled: true
+        endpoints:
+            login:
+                enabled: true
+            oauth:
+                enabled: true
+        interceptUrlMap:
+            -
+                pattern: /hello/*
+                httpMethod: GET
+                access:
+                    - isAnonymous()
+            -
+                pattern: /tasks
+                access:
+                    - isAuthenticated()
+            -
+                pattern: /tasks/*
+                access:
+                    - isAuthenticated()
+#      -
+#        pattern: /books/grails
+#        httpMethod: GET
+#        access:
+#          - ROLE_ADMIN
+#          - ROLE_MANAGER
+#          - ROLE_STAFF
+        token:
+            jwt:
+                enabled: true
+                signatures:
+                    secret:
+                    generator:
+                        secret: pleaseChangeThisSecretForANewOne
+                        base64: true
+                        jws-algorithm: HS256
+
 jackson:
     dateFormat: yyyy-MM-dd'T'HH:mm:ss.SSSXXX
 
@@ -33,3 +69,5 @@ jpa:
 #                    auto: update
                     auto: none
                 show_sql: true
+
+

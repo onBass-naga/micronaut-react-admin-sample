@@ -24,3 +24,6 @@ $ java -jar build/libs/api-java-0.1-all.jar
 
 [guide](http://guides.micronaut.io/micronaut-data-access-jpa-hibernate/guide/index.html)
 
+## Authentication
+
+[guide](http://guides.micronaut.io/micronaut-security-jwt/guide/index.html)

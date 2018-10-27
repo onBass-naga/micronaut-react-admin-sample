@@ -49,19 +49,16 @@ const convertDataProviderRequestToHTTP = (type, resource, params) => {
         options: { method: 'PUT', body: JSON.stringify(params.data) }
       }
     case CREATE:
-      console.log(`CREATE: ${JSON.stringify(params.data)}`)
       return {
         url: `${API_URL}/${resource}`,
         options: { method: 'POST', body: JSON.stringify(params.data) }
       }
     case DELETE:
-      console.log(`del: ${API_URL}/${resource}/${params.id}`)
       return {
         url: `${API_URL}/${resource}/${params.id}`,
         options: { method: 'DELETE' }
       }
     case DELETE_MANY:
-      console.log(`DELETE_MANY: ${JSON.stringify(params)}`)
       const query = {
         filter: JSON.stringify({ id: params.ids })
       }
@@ -104,23 +101,23 @@ const convertHTTPResponseToDataProvider = (
 export default (type, resource, params) => {
   const { fetchJson } = fetchUtils
 
-  // const token = localStorage.getItem('token')
-  // const headersOpt = {
-  //   headers: new Headers({
-  //     Accept: 'application/json',
-  //     Authorization: `Bearer ${token}`
-  //   })
-  // }
+  const accessToken = localStorage.getItem('accessToken')
+  const tokenType = localStorage.getItem('tokenType')
+
+  const headersOpt = {
+    headers: new Headers({
+      Accept: 'application/json',
+      Authorization: `${tokenType} ${accessToken}`
+    })
+  }
   const { url, options } = convertDataProviderRequestToHTTP(
     type,
     resource,
     params
   )
-  // const opts = !options
-  //   ? headersOpt
-  //   : Object.assign({}, ...options, ...headersOpt)
+  const opts = Object.assign({}, options, headersOpt)
 
-  return fetchJson(url, options).then(response =>
+  return fetchJson(url, opts).then(response =>
     convertHTTPResponseToDataProvider(response, type, resource, params)
   )
 }
